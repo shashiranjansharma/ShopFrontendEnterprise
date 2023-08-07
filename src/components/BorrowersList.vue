@@ -6,9 +6,7 @@ import { DUE_API } from '../endpoints'
 const $axios = inject('$axios')
 
 interface User {
-  f_name: string
-  l_name: string
-  address: string
+  full_name: string
   total_money?: number
   remaining_money?: number
   phone?: number
@@ -25,11 +23,16 @@ onMounted(async () => {
 
 async function fetchBorrowers() {
   try {
-    const response = await $axios.get(DUE_API.BORROWERS_LIST)
-    console.log(response)
+    const { data } = await $axios.get(DUE_API.BORROWERS_LIST)
+    state.tableData = data.results
   } catch {
     //
   }
+}
+
+function onCreateSuccess() {
+  state.drawer = false
+  fetchBorrowers()
 }
 </script>
 
@@ -40,14 +43,13 @@ async function fetchBorrowers() {
       <el-button type="primary" @click="state.drawer = true">Add Borrower</el-button>
     </div>
     <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
-      <el-table-column prop="f_name" label="Name" width="180" />
-      <el-table-column prop="l_name" label="Name" width="180" />
-      <el-table-column prop="address" label="Address" />
+      <el-table-column prop="full_name" label="Name" width="180" />
+      <el-table-column prop="phone" label="Phone" />
       <el-table-column prop="total_money" label="Total Due" width="180" />
       <el-table-column prop="remaining_money" label="Remaining" width="180" />
     </el-table>
-    <el-drawer v-model="state.drawer" title="I'm outer Drawer" class="p-0" size="50%">
-      <BorrowersForm />
+    <el-drawer v-model="state.drawer" title="Create Borrower" class="p-0" size="50%">
+      <BorrowersForm @success="onCreateSuccess" />
     </el-drawer>
   </div>
 </template>
