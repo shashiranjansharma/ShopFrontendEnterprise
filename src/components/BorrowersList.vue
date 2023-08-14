@@ -51,13 +51,13 @@ function closeDrawer() {
 
 <template>
   <div class="w-100 px-3">
-    <div class="py-3 d-flex justify-between">
+    <div class="py-1 d-flex justify-between header-main">
       <h2>Borrowers List</h2>
       <el-button type="primary" @click="state.drawer = true">Add Borrower</el-button>
     </div>
     <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
-      <el-table-column prop="full_name" label="Name" width="300" />
-      <el-table-column prop="phone" label="Phone" />
+      <el-table-column prop="full_name" label="Name" />
+      <el-table-column prop="phone" label="Phone" width="200" />
       <el-table-column prop="total_money" label="Total Due" width="180" />
       <el-table-column prop="remaining_money" label="Remaining" width="180" />
       <el-table-column fixed="right" label="Operations" width="120">
@@ -72,6 +72,7 @@ function closeDrawer() {
       :title="state.showDetail ? 'Borrowers Detail' : 'Create Borrower'"
       class="p-0"
       size="50%"
+      z-index="99999"
       @close="closeDrawer"
     >
       <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
@@ -81,10 +82,22 @@ function closeDrawer() {
 </template>
 
 <style>
+.header-main {
+  border-top: 1px solid #a39c9c;
+  border-bottom: 1px solid #a39c9c;
+}
 .el-table .warning-row {
   --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+.el-drawer__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: black;
+}
+.el-drawer__header {
+  margin-bottom: 0 !important;
 }
 </style>

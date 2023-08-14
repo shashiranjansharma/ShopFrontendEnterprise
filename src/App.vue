@@ -21,6 +21,10 @@ header {
   padding: 15px;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: rgb(252, 233, 233);
 }
 
 .logo {
@@ -35,7 +39,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: black;
 }
 
 nav a.router-link-exact-active:hover {
