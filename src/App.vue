@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" />
+    <h2>Shop App</h2>
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -50,5 +50,9 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+h2 {
+  font-weight: 800;
+  font-size: large;
 }
 </style>
