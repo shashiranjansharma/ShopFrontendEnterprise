@@ -17,7 +17,13 @@ const state = reactive({
   tableData: [] as User[],
   drawer: false,
   showDetail: false,
-  selectedUser: {} as User
+  selectedUser: {} as User,
+  filter: {
+    page: 1,
+    page_size: 10,
+    q: ''
+  },
+  total: 100
 })
 
 onMounted(async () => {
@@ -26,10 +32,24 @@ onMounted(async () => {
 
 async function fetchBorrowers() {
   try {
-    const { data } = await $axios.get(DUE_API.BORROWERS_LIST)
+    const { data } = await $axios.get(DUE_API.BORROWERS_LIST, { params: { ...state.filter } })
     state.tableData = data.results
+    state.total = data.count
   } catch {
     //
+  }
+}
+
+function previous() {
+  if (state.filter.page > 1) {
+    state.filter.page--
+    fetchBorrowers()
+  }
+}
+function next() {
+  if (state.filter.page * state.filter.page_size < state.total) {
+    state.filter.page++
+    fetchBorrowers()
   }
 }
 
@@ -67,12 +87,27 @@ function closeDrawer() {
         </template>
       </el-table-column>
     </el-table>
+    <div class="d-flex justify-content-center align-items-center w-100 pagination">
+      <button class="pagination__btn" @click="previous" :disabled="state.filter.page <= 1">
+        {{ '< Previous' }}
+      </button>
+      <span>{{
+        `page: ${state.filter.page} of ${Math.ceil(state.total / state.filter.page_size)}`
+      }}</span>
+      <button
+        class="pagination__btn"
+        @click="next"
+        :disabled="state.filter.page >= Math.ceil(state.total / state.filter.page_size)"
+      >
+        {{ 'Next >' }}
+      </button>
+    </div>
     <el-drawer
       v-model="state.drawer"
       :title="state.showDetail ? 'Borrowers Detail' : 'Create Borrower'"
       class="p-0"
       size="50%"
-      z-index="99999"
+      z-index="1000"
       @close="closeDrawer"
     >
       <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
@@ -81,7 +116,7 @@ function closeDrawer() {
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .header-main {
   border-top: 1px solid #a39c9c;
   border-bottom: 1px solid #a39c9c;
@@ -99,5 +134,25 @@ function closeDrawer() {
 }
 .el-drawer__header {
   margin-bottom: 0 !important;
+}
+.pagination {
+  background-color: #ffcdcd;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 15px 0;
+  &__btn {
+    height: 30px;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-weight: 800;
+    color: rgb(40, 126, 126);
+    background-color: rgb(128, 243, 243);
+    cursor: pointer;
+  }
 }
 </style>
