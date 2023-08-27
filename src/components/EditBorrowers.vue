@@ -119,8 +119,14 @@ const emit = defineEmits(['success'])
         <el-form-item label="Transaction Detail" prop="transaction_details.transaction_details">
           <el-input v-model="state.user.transaction_details.transaction_details" />
         </el-form-item>
-        <el-form-item label="Total money" prop="transaction_details.total_money">
-          <el-input v-model.number="state.user.transaction_details.total_money" type="number" />
+        <el-form-item label="Total money" prop="transaction_details.total_money" class="w-100">
+          <el-input-number
+            :precision="2"
+            controls-position="right"
+            class="w-100"
+            v-model="state.user.transaction_details.total_money"
+            type="number"
+          />
         </el-form-item>
         <el-form-item label="Transaction Date" prop="transaction_details.transaction_date">
           <el-date-picker
