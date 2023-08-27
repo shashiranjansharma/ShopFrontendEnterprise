@@ -78,11 +78,11 @@ async function fetchBorrowers() {
   }
   &--transaction-pay {
     background-color: rgb(202, 255, 237);
-    border-color: green;
+    border-color: green !important;
   }
   &--transaction-due {
     background-color: rgb(255, 220, 219);
-    border-color: red;
+    border-color: red !important;
   }
 }
 </style>

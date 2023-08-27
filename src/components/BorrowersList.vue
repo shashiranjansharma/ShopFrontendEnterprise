@@ -56,7 +56,7 @@ function next() {
 }
 
 function onCreateSuccess() {
-  state.showCreate = false
+  closeDrawer()
   fetchBorrowers()
 }
 function openDetail(row: any) {
