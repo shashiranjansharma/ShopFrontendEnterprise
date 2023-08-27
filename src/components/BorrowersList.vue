@@ -3,6 +3,7 @@ import { reactive, inject, onMounted } from 'vue'
 import BorrowersForm from './BorrowersForm.vue'
 import { DUE_API } from '../endpoints'
 import BorrowersDetails from './BorrowersDetails.vue'
+import EditBorrowers from './EditBorrowers.vue'
 
 const $axios = inject('$axios')
 
@@ -15,8 +16,9 @@ interface User {
 
 const state = reactive({
   tableData: [] as User[],
-  drawer: false,
+  showCreate: false,
   showDetail: false,
+  showEdit: false,
   selectedUser: {} as User,
   filter: {
     page: 1,
@@ -54,17 +56,23 @@ function next() {
 }
 
 function onCreateSuccess() {
-  state.drawer = false
+  state.showCreate = false
   fetchBorrowers()
 }
 function openDetail(row: any) {
   state.showDetail = true
-  state.drawer = true
+  state.showCreate = true
+  state.selectedUser = row
+}
+function openEdit(row: any) {
+  state.showEdit = true
+  state.showCreate = true
   state.selectedUser = row
 }
 function closeDrawer() {
   state.showDetail = false
-  state.drawer = false
+  state.showCreate = false
+  state.showEdit = false
   state.selectedUser = {}
 }
 </script>
@@ -73,7 +81,7 @@ function closeDrawer() {
   <div class="w-100 px-3">
     <div class="py-1 d-flex justify-between header-main">
       <h2>Borrowers List</h2>
-      <el-button type="primary" @click="state.drawer = true">Add Borrower</el-button>
+      <el-button type="primary" @click="state.showCreate = true">Add Borrower</el-button>
     </div>
     <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
       <el-table-column prop="full_name" label="Name" />
@@ -83,7 +91,7 @@ function closeDrawer() {
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="{ row }">
           <el-button link type="primary" size="small" @click="openDetail(row)">Detail</el-button>
-          <el-button link type="primary" size="small">Edit</el-button>
+          <el-button link type="primary" size="small" @click="openEdit(row)">Edit</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -103,14 +111,25 @@ function closeDrawer() {
       </button>
     </div>
     <el-drawer
-      v-model="state.drawer"
-      :title="state.showDetail ? 'Borrowers Detail' : 'Create Borrower'"
+      v-model="state.showCreate"
+      :title="
+        state.showDetail
+          ? 'Transaction Details'
+          : state.showEdit
+          ? 'Update Transaction'
+          : 'Create Transaction'
+      "
       class="p-0"
       size="50%"
-      z-index="1000"
+      :zIndex="1000"
       @close="closeDrawer"
     >
       <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
+      <EditBorrowers
+        v-else-if="state.showEdit"
+        :user="state.selectedUser"
+        @success="onCreateSuccess"
+      />
       <BorrowersForm v-else @success="onCreateSuccess" />
     </el-drawer>
   </div>

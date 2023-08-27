@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, inject } from 'vue'
 import { DUE_API } from '../endpoints'
-import moment from 'moment'
 
 const $axios = inject('$axios')
 
@@ -78,15 +77,15 @@ const emit = defineEmits(['success'])
     <el-form-item label="Phone" prop="phone">
       <el-input v-model="ruleForm.phone" type="number" />
     </el-form-item>
-    <label class="el-form-item__label">Due Details</label>
+    <label class="el-form-item__label">Transaction Details</label>
     <div class="due-detail">
-      <el-form-item label="Due Detail" prop="due_detail.due_detail">
+      <el-form-item label="Transaction Detail" prop="due_detail.due_detail">
         <el-input v-model="ruleForm.due_detail.due_detail" />
       </el-form-item>
       <el-form-item label="Total money" prop="due_detail.total_money">
         <el-input v-model.number="ruleForm.due_detail.total_money" type="number" />
       </el-form-item>
-      <el-form-item label="Due Date" prop="due_detail.due_date">
+      <el-form-item label="Transaction Date" prop="due_detail.due_date">
         <el-date-picker
           v-model="ruleForm.due_detail.due_date"
           type="date"

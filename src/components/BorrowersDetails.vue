@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, inject } from 'vue'
 import { DUE_API } from '../endpoints'
+import { convertEpochToDate } from '@/utility'
 import { onMounted } from 'vue'
 
 const $axios = inject('$axios')
@@ -25,7 +26,7 @@ async function fetchBorrowers() {
 
 <template>
   <div class="user">
-    <h3 class="mb-2">Basic Information:</h3>
+    <h3 class="mb-1">Basic Information:</h3>
     <div class="user--basic">
       <div class="mb-3">
         <p class="label">{{ `Name` }}</p>
@@ -40,6 +41,18 @@ async function fetchBorrowers() {
         <p class="value">{{ state.user.total_money }}</p>
       </div>
     </div>
+    <h3 class="mb-1 mt-3">Transaction Details:</h3>
+    <div
+      :class="`mb-2 user--transaction user--transaction-${due.transaction_type ? 'pay' : 'due'}`"
+      v-for="due in state.user.transaction_history"
+      :key="due.id"
+    >
+      <div class="d-flex justify-between">
+        <div class="label">{{ convertEpochToDate(due.transaction_date) }}</div>
+        <div class="label">{{ `RS: ${due.total_money}` }}</div>
+      </div>
+      <p>{{ due.transaction_detail }}</p>
+    </div>
   </div>
 </template>
 <style lang="scss">
@@ -53,12 +66,23 @@ async function fetchBorrowers() {
     font-size: 14px;
     font-weight: 400;
   }
-  &--basic {
+  &--basic,
+  &--transaction {
     padding: 15px;
-    border: 1px solid black;
     border-radius: 4px;
     display: grid;
+    min-height: 80px;
+  }
+  &--basic {
     grid-template-columns: 50% auto;
+  }
+  &--transaction-pay {
+    background-color: rgb(202, 255, 237);
+    border-color: green;
+  }
+  &--transaction-due {
+    background-color: rgb(255, 220, 219);
+    border-color: red;
   }
 }
 </style>
