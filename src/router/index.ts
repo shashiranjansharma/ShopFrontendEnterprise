@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/borrowers',
       name: 'borrowers',
-      component: () => import('../views/BorrowersView.vue')
+      component: () => import('../views/MainLayout.vue')
     }
   ]
 })

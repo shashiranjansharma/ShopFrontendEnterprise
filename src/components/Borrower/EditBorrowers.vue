@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { reactive, ref, inject } from 'vue'
-import { DUE_API } from '../endpoints'
+import { DUE_API } from '../../endpoints'
 import { onMounted } from 'vue'
 
-const $axios = inject('$axios')
+const $axios: any = inject('$axios')
 const props = defineProps({
   user: {
     type: Object,
@@ -24,7 +24,7 @@ const state = reactive({
       total_money: 0 as number,
       transaction_date: new Date().getTime()
     }
-  },
+  } as Record<string, any>,
   type: 'due'
 })
 

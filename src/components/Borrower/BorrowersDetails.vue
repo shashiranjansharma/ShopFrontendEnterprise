@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { reactive, ref, inject } from 'vue'
-import { DUE_API } from '../endpoints'
+import { reactive, inject } from 'vue'
+import { DUE_API } from '@/endpoints'
 import { convertEpochToDate } from '@/utility'
 import { onMounted } from 'vue'
+import { User } from './interfaces'
 
-const $axios = inject('$axios')
+const $axios: any = inject('$axios')
+
 const props = defineProps({
   user: {
     type: Object,
@@ -12,14 +14,13 @@ const props = defineProps({
   }
 })
 const state = reactive({
-  user: {}
+  user: {} as User
 })
 onMounted(() => {
   fetchBorrowers()
 })
 async function fetchBorrowers() {
   const { data } = await $axios.get(DUE_API.BORROWERS_LIST, { params: { id: props.user.id } })
-  console.log(data)
   state.user = data
 }
 </script>

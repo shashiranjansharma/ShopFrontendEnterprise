@@ -1,18 +1,12 @@
 <script lang="ts" setup>
 import { reactive, inject, onMounted } from 'vue'
 import BorrowersForm from './BorrowersForm.vue'
-import { DUE_API } from '../endpoints'
+import { DUE_API } from '../../endpoints'
 import BorrowersDetails from './BorrowersDetails.vue'
 import EditBorrowers from './EditBorrowers.vue'
+import { type User } from './interfaces'
 
-const $axios = inject('$axios')
-
-interface User {
-  full_name: string
-  total_money?: number
-  remaining_money?: number
-  phone?: number
-}
+const $axios: any = inject('$axios')
 
 const state = reactive({
   tableData: [] as User[],
@@ -73,7 +67,7 @@ function closeDrawer() {
   state.showDetail = false
   state.showCreate = false
   state.showEdit = false
-  state.selectedUser = {}
+  state.selectedUser = {} as User
 }
 </script>
 

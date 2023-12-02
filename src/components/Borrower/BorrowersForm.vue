@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, inject } from 'vue'
-import { DUE_API } from '../endpoints'
+import { DUE_API } from '../../endpoints'
 
 const $axios = inject('$axios')
 

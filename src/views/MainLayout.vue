@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BorrowersList from '@/components/BorrowersList.vue'
+import BorrowersList from '../components/Borrower/BorrowersList.vue'
 </script>
 
 <template>
