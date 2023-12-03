@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/borrowers',
       name: 'borrowers',
       component: () => import('../views/MainLayout.vue')
+    },
+    {
+      path: '/category',
+      name: 'Category',
+      component: () => import('../views/CategoryLayout.vue')
     }
   ]
 })

@@ -11,7 +11,7 @@ import router from './router'
 
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: 'http://localhost:8001/shop/'
+  baseURL: 'http://localhost:8001/'
 })
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 const app = createApp(App)

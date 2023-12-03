@@ -2,7 +2,7 @@
 import { reactive, ref, inject } from 'vue'
 import { DUE_API } from '../../endpoints'
 
-const $axios = inject('$axios')
+const $axios: any = inject('$axios')
 
 const formSize = ref('default')
 const ruleFormRef = ref()
