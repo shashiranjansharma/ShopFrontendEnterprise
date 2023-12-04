@@ -73,7 +73,7 @@ function closeDrawer() {
       :zIndex="1000"
       @close="closeDrawer"
     >
-      <CategoryForm @success="onCreateSuccess" />
+      <CategoryForm v-if="state.showCreate" @success="onCreateSuccess" />
     </el-drawer>
   </div>
 </template>
