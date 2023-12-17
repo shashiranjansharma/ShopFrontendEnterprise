@@ -57,10 +57,12 @@ function onCreateSuccess() {
 //   state.showCreate = true
 //   state.selectedItem = row
 // }
-function deleteProduct(row: any) {
+async function deleteProduct(row: any) {
   try {
-    if (confirm('Are you sure you want to delete?'))
-      $axios.put(PRODUCTS_API.REMOVE_ITEMS, { id: [row.id] })
+    if (confirm('Are you sure you want to delete?')) {
+      await $axios.put(PRODUCTS_API.REMOVE_ITEMS, { id: [row.id] })
+      fetchProducts()
+    }
   } catch (e) {
     console.log(e)
   }
