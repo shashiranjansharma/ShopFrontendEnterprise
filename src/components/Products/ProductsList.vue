@@ -1,19 +1,18 @@
 <script lang="ts" setup>
 import { reactive, inject, onMounted } from 'vue'
-import BorrowersForm from './BorrowersForm.vue'
-import { DUE_API } from '../../endpoints'
-import BorrowersDetails from './BorrowersDetails.vue'
-import EditBorrowers from './EditBorrowers.vue'
-import { type User } from './interfaces'
+import ProductForm from './ProductForm.vue'
+import { PRODUCTS_API } from '../../endpoints'
+import { type Products } from '../../interfaces'
+import axios from 'axios'
 
 const $axios: any = inject('$axios')
 
 const state = reactive({
-  tableData: [] as User[],
+  tableData: [] as Products[],
   showCreate: false,
   showDetail: false,
   showEdit: false,
-  selectedUser: {} as User,
+  selectedItem: {} as Products,
   filter: {
     page: 1,
     page_size: 10,
@@ -23,12 +22,12 @@ const state = reactive({
 })
 
 onMounted(async () => {
-  await fetchBorrowers()
+  await fetchProducts()
 })
 
-async function fetchBorrowers() {
+async function fetchProducts() {
   try {
-    const { data } = await $axios.get(DUE_API.BORROWERS_LIST, { params: { ...state.filter } })
+    const { data } = await $axios.get(PRODUCTS_API.ITEMS, { params: { ...state.filter } })
     state.tableData = data.results
     state.total = data.count
   } catch {
@@ -39,52 +38,61 @@ async function fetchBorrowers() {
 function previous() {
   if (state.filter.page > 1) {
     state.filter.page--
-    fetchBorrowers()
+    fetchProducts()
   }
 }
 function next() {
   if (state.filter.page * state.filter.page_size < state.total) {
     state.filter.page++
-    fetchBorrowers()
+    fetchProducts()
   }
 }
 
 function onCreateSuccess() {
   closeDrawer()
-  fetchBorrowers()
+  fetchProducts()
 }
-function openDetail(row: any) {
-  state.showDetail = true
-  state.showCreate = true
-  state.selectedUser = row
+// function openDetail(row: any) {
+//   state.showDetail = true
+//   state.showCreate = true
+//   state.selectedItem = row
+// }
+function deleteProduct(row: any) {
+  try {
+    if (confirm('Are you sure you want to delete?'))
+      $axios.put(PRODUCTS_API.REMOVE_ITEMS, { id: [row.id] })
+  } catch (e) {
+    console.log(e)
+  }
 }
 function openEdit(row: any) {
   state.showEdit = true
   state.showCreate = true
-  state.selectedUser = row
+  state.selectedItem = row
 }
 function closeDrawer() {
   state.showDetail = false
   state.showCreate = false
   state.showEdit = false
-  state.selectedUser = {} as User
+  state.selectedItem = {} as Products
 }
 </script>
 
 <template>
   <div class="w-100 px-3">
     <div class="py-1 d-flex justify-between header-main">
-      <h2>Borrowers List</h2>
-      <el-button type="primary" @click="state.showCreate = true">Add Borrower</el-button>
+      <h2>Products</h2>
+      <el-button type="primary" @click="state.showCreate = true">+ Add</el-button>
     </div>
     <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
-      <el-table-column prop="full_name" label="Name" />
-      <el-table-column prop="phone" label="Phone" width="200" />
-      <el-table-column prop="total_money" label="Total Due" width="180" />
-      <el-table-column prop="remaining_money" label="Remaining" width="180" />
+      <el-table-column prop="name" width="200" label="Name" />
+      <el-table-column prop="description" label="Description" />
+      <el-table-column prop="category.name" label="Category" width="180" />
+      <el-table-column prop="price" label="Price" width="180" />
+      <el-table-column prop="total" label="Total" width="180" />
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="openDetail(row)">Detail</el-button>
+          <el-button link type="primary" size="small" @click="deleteProduct(row)">Delete</el-button>
           <el-button link type="primary" size="small" @click="openEdit(row)">Edit</el-button>
         </template>
       </el-table-column>
@@ -107,24 +115,18 @@ function closeDrawer() {
     <el-drawer
       v-model="state.showCreate"
       :title="
-        state.showDetail
-          ? 'Transaction Details'
-          : state.showEdit
-          ? 'Update Transaction'
-          : 'Create Transaction'
+        state.showDetail ? 'Product Details' : state.showEdit ? 'Update Product' : 'Add Product'
       "
       class="p-0"
       size="50%"
       :zIndex="1000"
       @close="closeDrawer"
     >
-      <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
-      <EditBorrowers
-        v-else-if="state.showEdit"
-        :user="state.selectedUser"
+      <ProductForm
+        v-if="state.showEdit || state.showCreate"
+        :formData="state.selectedItem || {}"
         @success="onCreateSuccess"
       />
-      <BorrowersForm v-else @success="onCreateSuccess" />
     </el-drawer>
   </div>
 </template>
@@ -169,4 +171,3 @@ function closeDrawer() {
   }
 }
 </style>
-../../interfaces
