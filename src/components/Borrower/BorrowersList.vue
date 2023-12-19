@@ -1,14 +1,28 @@
 <script lang="ts" setup>
-import { reactive, inject, onMounted } from 'vue'
+import { reactive, inject, onMounted, ref } from 'vue'
 import BorrowersForm from './BorrowersForm.vue'
 import { DUE_API } from '../../endpoints'
 import BorrowersDetails from './BorrowersDetails.vue'
 import EditBorrowers from './EditBorrowers.vue'
-import { type User } from './interfaces'
+import { type User } from '../../interfaces'
 
 const $axios: any = inject('$axios')
 
+const tableConfig: any = ref([
+  {
+    key: 'full_name',
+    title: 'Name',
+    sortable: false
+  },
+  { key: 'phone', title: 'Phone', sortable: false, width: '20%' },
+  { key: 'total_money', title: 'Total Due', sortable: false, width: '10%' },
+  { key: 'remaining_money', title: 'Remaining', sortable: false, width: '10%' },
+  { key: 'operations', title: 'Operations', sortable: false, width: '10%' }
+])
+
 const state = reactive({
+  search: '',
+  loading: false,
   tableData: [] as User[],
   showCreate: false,
   showDetail: false,
@@ -19,7 +33,7 @@ const state = reactive({
     page_size: 10,
     q: ''
   },
-  total: 100
+  total: 0
 })
 
 onMounted(async () => {
@@ -28,25 +42,20 @@ onMounted(async () => {
 
 async function fetchBorrowers() {
   try {
+    state.loading = true
     const { data } = await $axios.get(DUE_API.BORROWERS_LIST, { params: { ...state.filter } })
     state.tableData = data.results
     state.total = data.count
   } catch {
     //
+  } finally {
+    state.loading = false
   }
 }
 
-function previous() {
-  if (state.filter.page > 1) {
-    state.filter.page--
-    fetchBorrowers()
-  }
-}
-function next() {
-  if (state.filter.page * state.filter.page_size < state.total) {
-    state.filter.page++
-    fetchBorrowers()
-  }
+function onUpdatePage(e) {
+  state.filter = { ...state.filter, page: e.page, q: e.search, page_size: e.itemsPerPage }
+  fetchBorrowers()
 }
 
 function onCreateSuccess() {
@@ -73,100 +82,71 @@ function closeDrawer() {
 
 <template>
   <div class="w-100 px-3">
-    <div class="py-1 d-flex justify-between header-main">
-      <h2>Borrowers List</h2>
-      <el-button type="primary" @click="state.showCreate = true">Add Borrower</el-button>
-    </div>
-    <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
-      <el-table-column prop="full_name" label="Name" />
-      <el-table-column prop="phone" label="Phone" width="200" />
-      <el-table-column prop="total_money" label="Total Due" width="180" />
-      <el-table-column prop="remaining_money" label="Remaining" width="180" />
-      <el-table-column fixed="right" label="Operations" width="120">
-        <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="openDetail(row)">Detail</el-button>
-          <el-button link type="primary" size="small" @click="openEdit(row)">Edit</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="d-flex justify-content-center align-items-center w-100 pagination">
-      <button class="pagination__btn" @click="previous" :disabled="state.filter.page <= 1">
-        {{ '< Previous' }}
-      </button>
-      <span>{{
-        `page: ${state.filter.page} of ${Math.ceil(state.total / state.filter.page_size)}`
-      }}</span>
-      <button
-        class="pagination__btn"
-        @click="next"
-        :disabled="state.filter.page >= Math.ceil(state.total / state.filter.page_size)"
+    <v-card flat>
+      <v-card-title class="d-flex align-center">
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="state.search"
+          prepend-inner-icon="mdi-magnify"
+          density="compact"
+          label="Search"
+          single-line
+          flat
+          hide-details
+          variant="solo-filled"
+        ></v-text-field>
+        <v-btn color="primary" class="ml-3" @click="state.showCreate = true">+ Add</v-btn>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-data-table-server
+        :headers="tableConfig"
+        :items="state.tableData"
+        :search="state.search"
+        :itemsPerPage="state.filter.page_size"
+        :page="state.filter.page"
+        :itemsLength="state.total"
+        :loading="state.loading"
+        @update:options="onUpdatePage"
       >
-        {{ 'Next >' }}
-      </button>
-    </div>
-    <el-drawer
-      v-model="state.showCreate"
-      :title="
-        state.showDetail
-          ? 'Transaction Details'
-          : state.showEdit
-          ? 'Update Transaction'
-          : 'Create Transaction'
-      "
-      class="p-0"
-      size="50%"
-      :zIndex="1000"
-      @close="closeDrawer"
-    >
-      <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
-      <EditBorrowers
-        v-else-if="state.showEdit"
-        :user="state.selectedUser"
-        @success="onCreateSuccess"
-      />
-      <BorrowersForm v-else @success="onCreateSuccess" />
-    </el-drawer>
+        <template v-slot:[`item.operations`]="{ item }">
+          <v-chip @click="openDetail(item)"><v-icon icon="mdi-eye" /></v-chip>
+          <v-chip class="ml-3" @click="openEdit(item)"><v-icon icon="mdi-pencil" /></v-chip>
+        </template>
+      </v-data-table-server>
+    </v-card>
+
+    <v-row justify="center">
+      <v-dialog
+        v-model="state.showCreate"
+        fullscreen
+        :scrim="false"
+        transition="dialog-top-transition"
+      >
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>{{
+              state.showDetail
+                ? 'Transaction Details'
+                : state.showEdit
+                ? 'Update Transaction'
+                : 'Create Transaction'
+            }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="closeDrawer">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <div class="pa-8">
+            <BorrowersDetails v-if="state.showDetail" :user="state.selectedUser" />
+            <EditBorrowers
+              v-else-if="state.showEdit"
+              :user="state.selectedUser"
+              @success="onCreateSuccess"
+            />
+            <BorrowersForm v-else @success="onCreateSuccess" />
+          </div>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
-
-<style lang="scss">
-.header-main {
-  border-top: 1px solid #a39c9c;
-  border-bottom: 1px solid #a39c9c;
-}
-.el-table .warning-row {
-  --el-table-tr-bg-color: var(--el-color-warning-light-9);
-}
-.el-table .success-row {
-  --el-table-tr-bg-color: var(--el-color-success-light-9);
-}
-.el-drawer__title {
-  font-size: 24px;
-  font-weight: 600;
-  color: black;
-}
-.el-drawer__header {
-  margin-bottom: 0 !important;
-}
-.pagination {
-  background-color: #ffcdcd;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 15px 0;
-  &__btn {
-    height: 30px;
-    border-radius: 50%;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    font-weight: 800;
-    color: rgb(40, 126, 126);
-    background-color: rgb(128, 243, 243);
-    cursor: pointer;
-  }
-}
-</style>
-../../interfaces

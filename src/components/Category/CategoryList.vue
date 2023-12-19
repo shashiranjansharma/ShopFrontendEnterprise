@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, inject, onMounted } from 'vue'
+import { reactive, inject, onMounted, ref } from 'vue'
 import CategoryForm from './CategoryForm.vue'
 import { CATEGORY_API } from '../../endpoints'
 
@@ -10,10 +10,27 @@ interface Category {
 }
 
 const $axios: any = inject('$axios')
+const tableConfig: any = ref([
+  {
+    key: 'name',
+    title: 'Name',
+    sortable: false,
+    width: '20%'
+  },
+  { key: 'description', title: 'Description', sortable: false },
+  { key: 'category_type', title: 'Type', sortable: false, width: '10%' },
+  { key: 'operations', title: 'Operations', sortable: false, width: '10%' }
+])
 
 const state = reactive({
+  search: '',
+  loading: false,
   tableData: [] as Category[],
-  showCreate: false
+  showCreate: false,
+  filter: {
+    q: ''
+  },
+  total: 0
 })
 
 onMounted(async () => {
@@ -22,11 +39,20 @@ onMounted(async () => {
 
 async function fetchCustomCategory() {
   try {
-    const { data } = await $axios.get(CATEGORY_API.CUSTOM_CATEGORY)
+    state.loading = true
+    const { data } = await $axios.get(CATEGORY_API.CUSTOM_CATEGORY, { params: { ...state.filter } })
     state.tableData = data || []
+    state.total = data.count
   } catch {
     //
+  } finally {
+    state.loading = false
   }
+}
+
+function onUpdatePage(e) {
+  state.filter = { ...state.filter, q: e.search }
+  fetchCustomCategory()
 }
 
 async function onDelete(event: any) {
@@ -48,53 +74,58 @@ function closeDrawer() {
   state.showCreate = false
 }
 </script>
-
 <template>
   <div class="w-100 px-3">
-    <div class="py-1 d-flex justify-between header-main">
-      <h2>Categories</h2>
-      <el-button type="primary" @click="state.showCreate = true">+ Add</el-button>
-    </div>
-    <el-table :data="state.tableData" style="width: 100%" row-class-name="tableRowClassName">
-      <el-table-column prop="name" label="Name" width="200" />
-      <el-table-column prop="description" label="Description" />
-      <el-table-column prop="category_type" label="Type" width="180" />
-      <el-table-column fixed="right" label="Operations" width="120">
-        <template #default="{ row }">
-          <el-button link type="primary" size="small" @click="onDelete(row)">Delete</el-button>
+    <v-card flat>
+      <v-card-title class="d-flex align-center">
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="state.search"
+          prepend-inner-icon="mdi-magnify"
+          density="compact"
+          label="Search"
+          single-line
+          flat
+          hide-details
+          variant="solo-filled"
+        ></v-text-field>
+        <v-btn color="primary" class="ml-3" @click="state.showCreate = true">+ Add</v-btn>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-data-table-virtual
+        :headers="tableConfig"
+        :items="state.tableData"
+        :search="state.search"
+        :loading="state.loading"
+        :hide-default-footer="true"
+        @update:options="onUpdatePage"
+      >
+        <template v-slot:[`item.operations`]="{ item }">
+          <v-chip @click="onDelete(item)"><v-icon icon="mdi-delete" /></v-chip>
         </template>
-      </el-table-column>
-    </el-table>
-    <el-drawer
-      v-model="state.showCreate"
-      :title="'Create Category'"
-      class="p-0"
-      size="50%"
-      :zIndex="1000"
-      @close="closeDrawer"
-    >
-      <CategoryForm v-if="state.showCreate" @success="onCreateSuccess" />
-    </el-drawer>
+      </v-data-table-virtual>
+    </v-card>
+
+    <v-row justify="center">
+      <v-dialog
+        v-model="state.showCreate"
+        fullscreen
+        :scrim="false"
+        transition="dialog-top-transition"
+      >
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-toolbar-title>{{ 'Create category' }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon dark @click="closeDrawer">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <div class="pa-8">
+            <CategoryForm v-if="state.showCreate" @success="onCreateSuccess" />
+          </div>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
-
-<style lang="scss">
-.header-main {
-  border-top: 1px solid #a39c9c;
-  border-bottom: 1px solid #a39c9c;
-}
-.el-table .warning-row {
-  --el-table-tr-bg-color: var(--el-color-warning-light-9);
-}
-.el-table .success-row {
-  --el-table-tr-bg-color: var(--el-color-success-light-9);
-}
-.el-drawer__title {
-  font-size: 24px;
-  font-weight: 600;
-  color: black;
-}
-.el-drawer__header {
-  margin-bottom: 0 !important;
-}
-</style>

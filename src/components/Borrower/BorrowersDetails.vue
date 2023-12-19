@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { reactive, inject } from 'vue'
 import { DUE_API } from '@/endpoints'
-import { convertEpochToDate } from '@/utility'
+import { epochToDate } from '@/utility'
 import { onMounted } from 'vue'
-import { User } from './interfaces'
+import { User } from '../../interfaces'
 
 const $axios: any = inject('$axios')
 
@@ -49,7 +49,7 @@ async function fetchBorrowers() {
       :key="due.id"
     >
       <div class="d-flex justify-between">
-        <div class="label">{{ convertEpochToDate(due.transaction_date) }}</div>
+        <div class="label">{{ epochToDate(due.transaction_date) }}</div>
         <div class="label">{{ `RS: ${due.total_money}` }}</div>
       </div>
       <p>{{ due.transaction_detail }}</p>
