@@ -9,3 +9,11 @@ export function epochToDate(epochTime: number) {
 export function toEpoch(time: Date) {
   return new Date(time).getTime()
 }
+
+export function debounce(fn: Function, ms = 600) {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), ms)
+  }
+}

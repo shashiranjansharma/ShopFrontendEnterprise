@@ -5,6 +5,7 @@ import { DUE_API } from '../../endpoints'
 import BorrowersDetails from './BorrowersDetails.vue'
 import EditBorrowers from './EditBorrowers.vue'
 import { type User } from '../../interfaces'
+import { debounce } from '@/utility'
 
 const $axios: any = inject('$axios')
 
@@ -39,6 +40,12 @@ const state = reactive({
 onMounted(async () => {
   await fetchBorrowers()
 })
+
+const debouncedUpdate = debounce(updateQuery)
+
+function updateQuery(q: string) {
+  state.search = q
+}
 
 async function fetchBorrowers() {
   try {
@@ -86,7 +93,7 @@ function closeDrawer() {
       <v-card-title class="d-flex align-center">
         <v-spacer></v-spacer>
         <v-text-field
-          v-model="state.search"
+          :modelValue="state.search"
           prepend-inner-icon="mdi-magnify"
           density="compact"
           label="Search"
@@ -94,6 +101,7 @@ function closeDrawer() {
           flat
           hide-details
           variant="solo-filled"
+          @update:modelValue="debouncedUpdate"
         ></v-text-field>
         <v-btn color="primary" class="ml-3" @click="state.showCreate = true">+ Add</v-btn>
       </v-card-title>

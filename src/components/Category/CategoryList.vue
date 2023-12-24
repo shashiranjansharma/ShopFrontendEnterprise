@@ -2,6 +2,7 @@
 import { reactive, inject, onMounted, ref } from 'vue'
 import CategoryForm from './CategoryForm.vue'
 import { CATEGORY_API } from '../../endpoints'
+import { debounce } from '@/utility'
 
 interface Category {
   name: string
@@ -36,6 +37,12 @@ const state = reactive({
 onMounted(async () => {
   await fetchCustomCategory()
 })
+
+const debouncedUpdate = debounce(updateQuery)
+
+function updateQuery(q: string) {
+  state.search = q
+}
 
 async function fetchCustomCategory() {
   try {
@@ -80,7 +87,7 @@ function closeDrawer() {
       <v-card-title class="d-flex align-center">
         <v-spacer></v-spacer>
         <v-text-field
-          v-model="state.search"
+          :modelValue="state.search"
           prepend-inner-icon="mdi-magnify"
           density="compact"
           label="Search"
@@ -88,6 +95,7 @@ function closeDrawer() {
           flat
           hide-details
           variant="solo-filled"
+          @update:modelValue="debouncedUpdate"
         ></v-text-field>
         <v-btn color="primary" class="ml-3" @click="state.showCreate = true">+ Add</v-btn>
       </v-card-title>
