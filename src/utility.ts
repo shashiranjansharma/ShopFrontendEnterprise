@@ -10,7 +10,7 @@ export function toEpoch(time: Date) {
   return new Date(time).getTime()
 }
 
-export function debounce(fn: Function, ms = 600) {
+export function debounce(fn: Function, ms = 1000) {
   let timeoutId: ReturnType<typeof setTimeout>
   return function (this: any, ...args: any[]) {
     clearTimeout(timeoutId)

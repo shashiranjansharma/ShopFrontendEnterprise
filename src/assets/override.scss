@@ -4,7 +4,7 @@
     box-shadow: 0 0 0 1000px rgba(0,0,0,.2);;
 }
 .v-toolbar__content{
-    padding: 0 16px;
+    padding: 0 32px;
     a{
         text-decoration: none;
         font-size: 18px;
@@ -15,4 +15,11 @@
         font-weight: bold;
         font-style: italic;
     }
+}
+.v-data-table-header__content{
+    font-weight: 600;
+}
+.v-table__wrapper{
+    border-radius: 36px;
+    border: thin solid rgba(var(--v-border-color), var(--v-border-opacity))
 }

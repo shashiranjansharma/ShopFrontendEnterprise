@@ -24,7 +24,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style scoped>
 .app-main-container {
-  margin-top: 16px;
+  margin: 16px;
   height: calc(100vh - 16px);
   overflow-y: auto;
 }

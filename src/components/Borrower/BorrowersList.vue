@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, inject, onMounted, ref } from 'vue'
+import { reactive, inject, ref } from 'vue'
 import BorrowersForm from './BorrowersForm.vue'
 import { DUE_API } from '../../endpoints'
 import BorrowersDetails from './BorrowersDetails.vue'
@@ -35,10 +35,6 @@ const state = reactive({
     q: ''
   },
   total: 0
-})
-
-onMounted(async () => {
-  await fetchBorrowers()
 })
 
 const debouncedUpdate = debounce(updateQuery)
@@ -90,7 +86,7 @@ function closeDrawer() {
 <template>
   <div class="w-100 px-3">
     <v-card flat>
-      <v-card-title class="d-flex align-center">
+      <v-card-title class="d-flex align-center mb-3 px-0">
         <v-spacer></v-spacer>
         <v-text-field
           :modelValue="state.search"

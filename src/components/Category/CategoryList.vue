@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, inject, onMounted, ref } from 'vue'
+import { reactive, inject, ref } from 'vue'
 import CategoryForm from './CategoryForm.vue'
 import { CATEGORY_API } from '../../endpoints'
 import { debounce } from '@/utility'
@@ -32,10 +32,6 @@ const state = reactive({
     q: ''
   },
   total: 0
-})
-
-onMounted(async () => {
-  await fetchCustomCategory()
 })
 
 const debouncedUpdate = debounce(updateQuery)
@@ -84,7 +80,7 @@ function closeDrawer() {
 <template>
   <div class="w-100 px-3">
     <v-card flat>
-      <v-card-title class="d-flex align-center">
+      <v-card-title class="d-flex align-center mb-3 px-0">
         <v-spacer></v-spacer>
         <v-text-field
           :modelValue="state.search"

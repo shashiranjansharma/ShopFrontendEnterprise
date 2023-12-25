@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, inject, onMounted, ref } from 'vue'
+import { reactive, inject, ref } from 'vue'
 import ProductForm from './ProductForm.vue'
 import { PRODUCTS_API } from '../../endpoints'
 import { type Products } from '../../interfaces'
@@ -34,10 +34,6 @@ const state = reactive({
     page_size: 10,
     q: ''
   }
-})
-
-onMounted(async () => {
-  await fetchProducts()
 })
 
 const debouncedUpdate = debounce(updateQuery)
@@ -93,7 +89,7 @@ function closeDrawer() {
 <template>
   <div class="w-100 px-3">
     <v-card flat>
-      <v-card-title class="d-flex align-center">
+      <v-card-title class="d-flex align-center mb-3 px-0">
         <v-spacer></v-spacer>
         <v-text-field
           :modelValue="state.search"

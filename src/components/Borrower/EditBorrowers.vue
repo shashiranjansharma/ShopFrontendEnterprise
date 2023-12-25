@@ -97,8 +97,8 @@ const emit = defineEmits(['success'])
         :rules="rules.transaction_details"
       ></v-text-field>
       <v-text-field
-        v-model="state.user.transaction_details.total_money"
-        label="Transaction Details"
+        v-model.number="state.user.transaction_details.total_money"
+        label="Amount"
         :rules="rules.total_money"
       ></v-text-field>
       <v-text-field
