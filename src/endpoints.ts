@@ -5,10 +5,12 @@ export const DUE_API = {
 
 export const CATEGORY_API = {
   TYPE: 'category/',
-  CUSTOM_CATEGORY: 'category/custom-category/'
+  CUSTOM_CATEGORY: 'category/custom-category/',
+  FILTER: 'filters/custom-category/'
 }
 
 export const PRODUCTS_API = {
   ITEMS: 'shop-item/',
-  REMOVE_ITEMS: 'shop-item/remove/'
+  REMOVE_ITEMS: 'shop-item/remove/',
+  FILTER: 'filters/shop-item/'
 }

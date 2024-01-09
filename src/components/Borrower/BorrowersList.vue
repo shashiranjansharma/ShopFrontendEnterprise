@@ -81,6 +81,11 @@ function closeDrawer() {
   state.showEdit = false
   state.selectedUser = {} as User
 }
+
+// function applyFilter(event: any) {
+//   state.filter = { ...state.filter, ...event, page: 1 }
+//   fetchBorrowers()
+// }
 </script>
 
 <template>

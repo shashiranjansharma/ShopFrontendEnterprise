@@ -4,8 +4,11 @@ import ProductForm from './ProductForm.vue'
 import { PRODUCTS_API } from '../../endpoints'
 import { type Products } from '../../interfaces'
 import { debounce } from '@/utility'
+import FilterBox from '../Common/Filter/FilterBox.vue'
 
 const $axios: any = inject('$axios')
+
+const filterRef = ref()
 
 const tableConfig: any = ref([
   {
@@ -62,14 +65,14 @@ function onUpdatePage(e) {
 
 function onCreateSuccess() {
   closeDrawer()
-  fetchProducts()
+  filterRef.value?.resetFilter()
 }
 
 async function deleteProduct(row: any) {
   try {
     if (confirm('Are you sure you want to delete?')) {
       await $axios.put(PRODUCTS_API.REMOVE_ITEMS, { id: [row.id] })
-      fetchProducts()
+      filterRef.value?.resetFilter()
     }
   } catch (e) {
     console.log(e)
@@ -85,11 +88,26 @@ function closeDrawer() {
   state.showEdit = false
   state.selectedItem = {} as Products
 }
+
+function applyFilter(event: any) {
+  state.filter = { ...state.filter, ...event, page: 1 }
+  fetchProducts()
+}
+function resetFilter() {
+  state.filter = { page: 1, page_size: 10, q: '' }
+  fetchProducts()
+}
 </script>
 <template>
   <div class="w-100 px-3">
     <v-card flat>
       <v-card-title class="d-flex align-center mb-3 px-0">
+        <FilterBox
+          ref="filterRef"
+          :filterAPI="PRODUCTS_API.FILTER"
+          @apply:filter="applyFilter"
+          @reset:filter="resetFilter"
+        />
         <v-spacer></v-spacer>
         <v-text-field
           :modelValue="state.search"

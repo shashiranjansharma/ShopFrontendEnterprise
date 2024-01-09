@@ -3,6 +3,7 @@ import { reactive, inject, ref } from 'vue'
 import CategoryForm from './CategoryForm.vue'
 import { CATEGORY_API } from '../../endpoints'
 import { debounce } from '@/utility'
+import FilterBox from '../Common/Filter/FilterBox.vue'
 
 interface Category {
   name: string
@@ -11,6 +12,8 @@ interface Category {
 }
 
 const $axios: any = inject('$axios')
+const filterRef = ref()
+
 const tableConfig: any = ref([
   {
     key: 'name',
@@ -62,7 +65,7 @@ async function onDelete(event: any) {
   if (confirm(`Are you sure?`))
     try {
       await $axios.put(CATEGORY_API.CUSTOM_CATEGORY, { id: [event.id] })
-      fetchCustomCategory()
+      filterRef.value.resetFilter()
     } catch {
       //
     }
@@ -70,17 +73,33 @@ async function onDelete(event: any) {
 
 function onCreateSuccess() {
   closeDrawer()
-  fetchCustomCategory()
+  filterRef.value.resetFilter()
 }
 
 function closeDrawer() {
   state.showCreate = false
+}
+
+function applyFilter(event: any) {
+  state.filter = { ...state.filter, ...event }
+  fetchCustomCategory()
+}
+
+function resetFilter() {
+  state.filter = { q: '' }
+  fetchCustomCategory()
 }
 </script>
 <template>
   <div class="w-100 px-3">
     <v-card flat>
       <v-card-title class="d-flex align-center mb-3 px-0">
+        <FilterBox
+          ref="filterRef"
+          :filterAPI="CATEGORY_API.FILTER"
+          @apply:filter="applyFilter"
+          @reset:filter="resetFilter"
+        />
         <v-spacer></v-spacer>
         <v-text-field
           :modelValue="state.search"

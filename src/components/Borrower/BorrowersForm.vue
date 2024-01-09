@@ -48,10 +48,6 @@ const submitForm = async () => {
   }
 }
 
-const resetForm = (formEl: any) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
 
 const emit = defineEmits(['success'])
 </script>
