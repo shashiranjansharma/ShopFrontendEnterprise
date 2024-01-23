@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject, ref } from 'vue'
 import CategoryForm from './CategoryForm.vue'
 import { CATEGORY_API } from '../../endpoints'
@@ -56,7 +56,7 @@ async function fetchCustomCategory() {
   }
 }
 
-function onUpdatePage(e) {
+function onUpdatePage(e: any) {
   state.filter = { ...state.filter, q: e.search }
   fetchCustomCategory()
 }

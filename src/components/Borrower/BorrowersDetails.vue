@@ -1,9 +1,9 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject } from 'vue'
 import { DUE_API } from '@/endpoints'
 import { epochToDate } from '@/utility'
 import { onMounted } from 'vue'
-import { User } from '../../interfaces'
+import { type User } from '../../interfaces'
 
 const $axios: any = inject('$axios')
 
@@ -87,4 +87,3 @@ async function fetchBorrowers() {
   }
 }
 </style>
-../../interfaces

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, ref, inject } from 'vue'
 import { DUE_API } from '../../endpoints'
 import { onMounted } from 'vue'
@@ -32,9 +32,9 @@ const state = reactive({
 })
 
 const rules = ref({
-  transaction_details: [(v) => !!v || 'Transaction details is required'],
-  total_money: [(v) => !!v || 'Total is required'],
-  transaction_date: [(v) => !!v || 'Transaction date is required']
+  transaction_details: [(v: any) => !!v || 'Transaction details is required'],
+  total_money: [(v: any) => !!v || 'Total is required'],
+  transaction_date: [(v: any) => !!v || 'Transaction date is required']
 })
 
 const submitForm = async () => {

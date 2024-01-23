@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject, ref } from 'vue'
 import ProductForm from './ProductForm.vue'
 import { PRODUCTS_API } from '../../endpoints'
@@ -24,7 +24,7 @@ const tableConfig: any = ref([
   { key: 'operations', title: 'Operations', sortable: false, width: '10%' }
 ])
 
-const state = reactive({
+const state: any = reactive({
   tableData: [] as Products[],
   showCreate: false,
   loading: false,
@@ -58,7 +58,7 @@ async function fetchProducts() {
   }
 }
 
-function onUpdatePage(e) {
+function onUpdatePage(e: any) {
   state.filter = { ...state.filter, page: e.page, q: e.search, page_size: e.itemsPerPage }
   fetchProducts()
 }

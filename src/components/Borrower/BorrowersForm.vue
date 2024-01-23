@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject } from 'vue'
 import { DUE_API } from '../../endpoints'
 import { epochToDate, toEpoch } from '../../utility'
@@ -16,22 +16,22 @@ const ruleForm = reactive({
 })
 
 const rules = reactive({
-  f_name: [(v) => !!v || 'First Name is required'],
-  l_name: [(v) => !!v || 'Last Name is required'],
+  f_name: [(v: any) => !!v || 'First Name is required'],
+  l_name: [(v: any) => !!v || 'Last Name is required'],
   phone: [
-    (v) => {
+    (v: any) => {
       if (v > 100000000 && /[0-9-]+/.test(v)) return true
       return 'Phone number needs to be at least 9 digits.'
     }
   ],
-  due_detail: [(v) => !!v || 'Due is required'],
+  due_detail: [(v: any) => !!v || 'Due is required'],
   total_money: [
-    (v) => {
+    (v: any) => {
       if (v > 1 && /[0-9-]+/.test(v)) return true
       return 'Total number must be a number and greater than 1'
     }
   ],
-  due_date: [(v) => !!v || 'Due date is required']
+  due_date: [(v: any) => !!v || 'Due date is required']
 })
 
 function updateDate(e: any) {
@@ -47,7 +47,6 @@ const submitForm = async () => {
     //
   }
 }
-
 
 const emit = defineEmits(['success'])
 </script>

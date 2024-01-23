@@ -14,7 +14,7 @@ const state = reactive({
   selectOptions: {} as Record<string, any>,
   selectedFilter: {} as Record<string, any>,
   optionsLoading: false,
-  filterModel: []
+  filterModel: [] as Record<string, any>[]
 })
 
 onMounted(async () => {

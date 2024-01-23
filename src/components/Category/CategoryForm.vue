@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject, onMounted } from 'vue'
 import { CATEGORY_API } from '../../endpoints'
 
@@ -19,9 +19,9 @@ const state = reactive({
 })
 
 const rules = reactive({
-  name: [(v) => !!v || 'Name is required'],
-  description: [(v) => !!v || 'Description is required'],
-  category_type: [(v) => !!v || 'Type is required']
+  name: [(v: any) => !!v || 'Name is required'],
+  description: [(v: any) => !!v || 'Description is required'],
+  category_type: [(v: any) => !!v || 'Type is required']
 })
 
 onMounted(() => {

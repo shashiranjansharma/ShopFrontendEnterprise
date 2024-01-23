@@ -1,3 +1,4 @@
+<script setup lang="ts"></script>
 <template>
   <div class="home">
     <H1>Welcome to Shop App</H1>

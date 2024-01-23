@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject, onMounted } from 'vue'
 import { CATEGORY_API, PRODUCTS_API } from '../../endpoints'
 
@@ -23,12 +23,12 @@ const ruleForm = reactive({
 })
 
 const rules = reactive({
-  name: [(v) => !!v || 'Name is required'],
-  description: [(v) => !!v || 'Details is required'],
-  barcode: [(v) => !!v || 'Barcode is required'],
-  total: [(v) => !!v || 'Total is required'],
-  price: [(v) => !!v || 'Price is required'],
-  category: [(v) => !!v || 'Please select category']
+  name: [(v: any) => !!v || 'Name is required'],
+  description: [(v: any) => !!v || 'Details is required'],
+  barcode: [(v: any) => !!v || 'Barcode is required'],
+  total: [(v: any) => !!v || 'Total is required'],
+  price: [(v: any) => !!v || 'Price is required'],
+  category: [(v: any) => !!v || 'Please select category']
 })
 
 onMounted(() => {
@@ -58,7 +58,9 @@ const fetchCategories = async () => {
 }
 
 const submitForm = async () => {
-  const cat = state.categories.find((item: Record<string, any>) => item.id === ruleForm.category)
+  const cat: any = state.categories.find(
+    (item: Record<string, any>) => item.id === ruleForm.category
+  )
   const payload = {
     ...ruleForm,
     category: cat,

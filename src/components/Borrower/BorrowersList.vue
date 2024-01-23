@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive, inject, ref } from 'vue'
 import BorrowersForm from './BorrowersForm.vue'
 import { DUE_API } from '../../endpoints'
@@ -56,7 +56,7 @@ async function fetchBorrowers() {
   }
 }
 
-function onUpdatePage(e) {
+function onUpdatePage(e: any) {
   state.filter = { ...state.filter, page: e.page, q: e.search, page_size: e.itemsPerPage }
   fetchBorrowers()
 }

@@ -6,9 +6,6 @@ import { RouterLink, RouterView } from 'vue-router'
   <v-card class="mx-auto">
     <v-layout full-height>
       <v-app-bar color="primary">
-        <!-- <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    </template> -->
         <v-app-bar-title>Shop App</v-app-bar-title>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/borrowers">Borrowers</RouterLink>
