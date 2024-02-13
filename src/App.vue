@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { VCard } from 'vuetify/components/VCard'
+import { VMain } from 'vuetify/components/VMain'
+import { VLayout } from 'vuetify/components/VLayout'
+import { VAppBar, VAppBarTitle } from 'vuetify/components/VAppBar'
 </script>
 
 <template>

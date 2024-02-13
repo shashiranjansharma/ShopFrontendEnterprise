@@ -16,6 +16,7 @@
     "axios": "^1.4.0",
     "moment": "^2.29.4",
     "pinia": "^2.0.36",
+    "vite-plugin-vuetify": "^2.0.1",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0",
     "vuetify": "^3.4.7"
@@ -34,7 +35,7 @@
     "prettier": "^2.8.8",
     "sass": "^1.65.1",
     "typescript": "~5.0.4",
-    "vite": "^4.3.5",
+    "vite": "^5.0.12",
     "vue-tsc": "^1.6.4"
   }
 }
