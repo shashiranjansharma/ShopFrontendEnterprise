@@ -21,6 +21,6 @@ export default defineConfig({
     port: 5031
   },
   preview: {
-    port: 5032
+    port: 80
   }
 });

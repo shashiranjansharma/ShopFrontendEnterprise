@@ -15,7 +15,7 @@ import router from './router';
 
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: 'http://localhost:8001/'
+  baseURL: 'http://localhost:80/'
 });
 const app = createApp(App);
 app.provide('$axios', axiosInstance);
