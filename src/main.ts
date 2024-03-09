@@ -13,9 +13,10 @@ const vuetify = createVuetify();
 import App from './App.vue';
 import router from './router';
 
+const { protocol, hostname } = window.location;
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: 'http://localhost:80/'
+  baseURL: `${protocol}//${hostname}:80`
 });
 const app = createApp(App);
 app.provide('$axios', axiosInstance);
