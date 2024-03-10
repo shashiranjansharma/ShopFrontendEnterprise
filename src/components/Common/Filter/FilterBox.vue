@@ -21,7 +21,7 @@ onMounted(async () => {
   try {
     state.optionsLoading = true
     const { data } = await $axios.get(props.filterAPI)
-    state.filterModel = data.filter((i: any) => i.qp_key !== 'q')
+    state.filterModel = data?.filter((i: any) => i.qp_key !== 'q')
   } catch (error: any) {
     console.log(error)
   }
