@@ -16,7 +16,7 @@ import router from './router';
 const { protocol, hostname } = window.location;
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: `${protocol}//${hostname}:80`
+  baseURL: `${protocol}//${hostname}:80/api/`
 });
 const app = createApp(App);
 app.provide('$axios', axiosInstance);
