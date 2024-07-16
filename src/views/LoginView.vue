@@ -2,6 +2,8 @@
 import { LOGIN_API } from '@/endpoints';
 import { inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+const { login } = useAuthStore()
 
 const $axios: any = inject('$axios')
 const router = useRouter();
@@ -21,11 +23,10 @@ const rules = reactive({
     password: [(v: any) => !!v || 'Password is required'],
 });
 
-async function login() {
-    //
+async function loginUser() {
     try {
     const { data } = await $axios.post(LOGIN_API.LOGIN, ruleForm)
-    localStorage.setItem('shop_app_token',`Token ${data.token}`);
+    login(`Token ${data.token}`);
     router.push({ name: 'home' });
   } catch {
     //
@@ -36,7 +37,7 @@ async function login() {
 <template>
     <div class="login-view">
         <div class="login-view-left">
-            Login View
+            <h1>Shop App</h1>
         </div>
         <div class="login-view-right">
             <v-form fast-fail  @submit.prevent ref="ruleFormRef">
@@ -45,7 +46,7 @@ async function login() {
                 <v-text-field v-model="ruleForm.password" label="Password" :rules="rules.password"/>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="indigo-darken-3" variant="flat" @click="login">Login</v-btn>
+                    <v-btn color="indigo-darken-3" variant="flat" @click="loginUser">Login</v-btn>
                 </v-card-actions>
             </v-form>
         </div>
@@ -58,6 +59,10 @@ async function login() {
     grid-template-columns: 50% 50%;
     &-left {
         background-color: blue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
     }
     &-right {
         display: flex;
