@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,24 +6,45 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      meta: { protedted: true },
       component: () => import('../views/HomeView.vue')
     },
     {
       path: '/borrowers',
       name: 'borrowers',
+      meta: { protedted: true },
       component: () => import('../views/BorrowersLayout.vue')
     },
     {
       path: '/category',
       name: 'Category',
+      meta: { protedted: true },
       component: () => import('../views/CategoryLayout.vue')
     },
     {
       path: '/product',
       name: 'Products',
+      meta: { protedted: true },
       component: () => import('../views/ProductsLayout.vue')
-    }
+    },
+    {
+      path: '/auth/login',
+      name: 'Login',
+      component: () => import('@/views/LoginView.vue')
+    },
   ]
-})
+});
 
-export default router
+router.beforeEach(async (to: any) => {
+  const isAuthenticated = localStorage.getItem('shop_app_token');
+  const isPublic = ['Login'].includes(to.name);
+  if (!isAuthenticated && !isPublic) {
+    return { name: 'Login' };
+  } else if (isAuthenticated && isPublic) {
+    return { name: 'home' };
+  } else if (isAuthenticated && !to.name) {
+    return { name: 'home' };
+  }
+});
+
+export default router;

@@ -4,12 +4,15 @@ import { VCard } from 'vuetify/components/VCard'
 import { VMain } from 'vuetify/components/VMain'
 import { VLayout } from 'vuetify/components/VLayout'
 import { VAppBar, VAppBarTitle } from 'vuetify/components/VAppBar'
+import { computed } from 'vue';
+const isAuthenticated = computed(() => localStorage.getItem('shop_app_token'));
+
 </script>
 
 <template>
-  <v-card class="mx-auto">
+  <v-card class="mx-auto" :key="isAuthenticated?.toString()">
     <v-layout full-height>
-      <v-app-bar color="primary">
+      <v-app-bar v-if="isAuthenticated" color="primary">
         <v-app-bar-title>Shop App</v-app-bar-title>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/borrowers">Borrowers</RouterLink>
