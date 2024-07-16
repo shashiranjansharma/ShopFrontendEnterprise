@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:18-bookworm-slim
+FROM --platform=linux/amd64 node:20-bookworm-slim
 WORKDIR /store/fe
 COPY ./ /store/fe
 RUN ls
