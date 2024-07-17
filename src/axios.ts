@@ -6,7 +6,7 @@ export function useAxios() {
     const { protocol, hostname } = window.location;
     const defaultOptions = {
         withCredentials: true,
-        baseURL: `${protocol}//dt1.${hostname}:80/api/`,
+        baseURL: `${protocol}//${hostname}:80/api/`,
         headers: {
             Authorization: token ? token : '',
         }
