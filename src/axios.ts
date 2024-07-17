@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from 'axios';
 import router from './router';
 
+
 export function useAxios() {
     const token = localStorage.getItem('shop_app_token');
     const { protocol, hostname } = window.location;

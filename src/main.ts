@@ -1,7 +1,5 @@
 import './assets/main.css';
-import axios from 'axios';
 import { useAxios } from './axios';
-
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
@@ -14,10 +12,10 @@ const vuetify = createVuetify();
 import App from './App.vue';
 import router from './router';
 
-const axiosInstance = useAxios();
 const app = createApp(App);
-app.provide('$axios', axiosInstance);
 app.use(createPinia());
 app.use(router);
 app.use(vuetify);
+const axiosInstance = useAxios();
+app.provide('$axios', axiosInstance);
 app.mount('#app');

@@ -12,11 +12,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function login(token: string) {
-    state.token = token;
     localStorage.setItem('shop_app_token', token);
+    state.token = token;
   }
 
-  const isLoggedIn = computed(() => !!state.token);
+  const isLoggedIn = computed(() => state.token);
 
   return { isLoggedIn, logout, login };
 });
