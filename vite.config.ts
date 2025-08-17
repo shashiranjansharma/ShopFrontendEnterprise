@@ -23,7 +23,11 @@ export default (config: Record<string, any>) => {
       port: 5031
     },
     preview: {
-      port: 5032
+      port: 5032,
+      "allowedHosts": [
+        'shop_fe'
+      ],
+
     }
   });
 };

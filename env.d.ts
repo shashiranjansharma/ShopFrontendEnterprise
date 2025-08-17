@@ -4,6 +4,7 @@ import "js-cookie";
 
 declare module 'vue';
 declare module 'axios';
+declare module '@vitejs/plugin-vue';
 declare module "js-cookie" {
   interface CookiesStatic {
     myCustomMethod?(key: string): string;
