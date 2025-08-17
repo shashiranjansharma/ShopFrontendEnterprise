@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import { useAxios } from '@/axios';
+import Cookies from 'js-cookie';
 
 
 const router = createRouter({
@@ -39,7 +40,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to: any) => {
-  const isAuthenticated = localStorage.getItem('shop_app_token');
+  const isAuthenticated = Cookies.get('shop_app_token');
   if (isAuthenticated) useAxios();
   const isPublic = ['Login'].includes(to.name);
   if (!isAuthenticated && !isPublic) {

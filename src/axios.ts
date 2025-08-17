@@ -1,15 +1,17 @@
 import axios, { type AxiosResponse } from 'axios';
 import router from './router';
+import Cookies from "js-cookie";
+
 
 
 export function useAxios() {
-    const token = localStorage.getItem('shop_app_token');
+    const token = Cookies.get('shop_app_token');
     const { protocol, hostname } = window.location;
     const defaultOptions = {
         withCredentials: true,
         baseURL: `${protocol}//${hostname}:80/api/`,
         headers: {
-            Authorization: token ? token : '',
+            Authorization: token ? 'Token ' + token : '',
         }
     };
     return {
@@ -28,7 +30,7 @@ axios.interceptors.response.use(
     },
     (error: any) => {
         if (error.response.status === 401) {
-            localStorage.removeItem('shop_app_token');
+            Cookies.remove('shop_app_token');
             router?.push({ name: 'Login' });
         }
         if (error.response && error.response.data) {
