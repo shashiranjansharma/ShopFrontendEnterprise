@@ -1,7 +1,7 @@
-FROM --platform=linux/amd64 node:20-bookworm-slim
+FROM --platform=linux/amd64 node:22-bookworm-slim
 WORKDIR /store/fe
 COPY ./ /store/fe
 RUN ls
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 CMD ["npm run dev"]
